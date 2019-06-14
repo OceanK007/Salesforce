@@ -1,0 +1,151 @@
+<aura:component controller="LoggerSettingConfiguratorController">
+	<aura:attribute name="descriptionObject" type="Object" access="public" description="Description Map to Fetch Label, Helptext for fields" />
+    <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" description="Displaying spinner while loading" />
+    <aura:attribute name="editLoggerRecord" default="false" type="boolean" access="private" description="Attribute to decide either view or edit form must be displayed" />
+    <aura:attribute name="loggerRecord" type="Logger_Settings__c" description="Attribute to hold Logger custom settings data" 
+                    default="{ 
+                                 'sobjectType': 'Logger_Settings__c',
+                                 'Id': '',
+                             	 'SetupOwnerId': '',
+                                 'ivpcc__Buffer_Heap_For_Log_Content_Creation__c': '',
+                                 'ivpcc__Log_Levels__c': 'NONE',
+                                 'ivpcc__Max_Heap_Allocated_For_Logger__c': '',
+                                 'ivpcc__Max_Log_Capture_Size__c': ''
+                             }"
+	/>
+	<aura:handler name="init" action="{!c.doInit}" value="{!this}" description="Fetching Logger custom setting data after component has initialized" />
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner />
+    </aura:if>
+     <lightning:card>         
+         <!-- Card Footer -->
+         <aura:set attribute="footer">
+             <aura:if isTrue="{!v.editLoggerRecord}">
+                 <div class="slds-text-align_right">
+                     <lightning:button label="Cancel" 
+                                       class="slds-m-top--medium slds-m-right_xx-small"
+                                       onclick="{!c.handleViewLoggerRecord}"/>
+                     <lightning:button label="{!(v.loggerRecord.Id == null ? 'Save' : 'Save')}" 
+                                       class="slds-m-top--medium slds-m-right_xx-small"
+                                       variant="brand"
+                                       onclick="{!c.handleUpsertLoggerSettingsRecord}"/>
+                 </div>
+             </aura:if>
+         </aura:set>
+         
+         <!-- Card Action -->
+         <aura:set attribute="actions">                        
+             <aura:if isTrue="{!!v.editLoggerRecord}">
+                 <lightning:button label="Edit" onclick="{!c.handleEditLoggerRecord}"/>
+             </aura:if>
+         </aura:set>
+         
+         <!-- Card Body -->
+         <lightning:layout multipleRows="true">
+             <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                 <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                     <label class="slds-form-element__label" for="text-input-id-1">
+                         <aura:if isTrue="{!v.editLoggerRecord}">
+                             <aura:if isTrue="{!v.descriptionObject.ivpcc__buffer_heap_for_log_content_creation__c.required == 'true'}">
+                                 <abbr class="slds-required" title="required">*</abbr>
+                             </aura:if>
+                         </aura:if>
+                         {!v.descriptionObject.ivpcc__buffer_heap_for_log_content_creation__c.label}
+                     </label>
+                     <aura:if isTrue="{!v.descriptionObject.ivpcc__buffer_heap_for_log_content_creation__c.helptext}">
+                         <lightning:helptext content="{!v.descriptionObject.ivpcc__buffer_heap_for_log_content_creation__c.helptext}" iconName="utility:info" /> 
+                     </aura:if>                            
+                     <aura:if isTrue="{!v.editLoggerRecord}">
+                         <lightning:input type="number"
+                                          aura:id="recordform" 
+                                          label="{!v.descriptionObject.ivpcc__buffer_heap_for_log_content_creation__c.label}"                                            
+                                          value="{!v.loggerRecord.ivpcc__Buffer_Heap_For_Log_Content_Creation__c}"
+                                          required="{!v.descriptionObject.ivpcc__buffer_heap_for_log_content_creation__c.required == 'true' ? true : false}"
+                                          class="hideLabel"/> 
+                         <aura:set attribute="else">
+                             <div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.loggerRecord.ivpcc__Buffer_Heap_For_Log_Content_Creation__c}</div>
+                         </aura:set>
+                     </aura:if>
+                     
+                 </div>
+             </lightning:layoutItem>
+             <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                 <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                     <label class="slds-form-element__label" for="text-input-id-1">
+                         <aura:if isTrue="{!v.editLoggerRecord}">
+                             <aura:if isTrue="{!v.descriptionObject.ivpcc__log_levels__c.required == 'true'}">
+                                 <abbr class="slds-required" title="required">*</abbr>
+                             </aura:if>
+                         </aura:if>
+                         {!v.descriptionObject.ivpcc__log_levels__c.label}
+                     </label>
+                     <aura:if isTrue="{!v.descriptionObject.ivpcc__log_levels__c.helptext}">
+                         <lightning:helptext content="{!v.descriptionObject.ivpcc__log_levels__c.helptext}" iconName="utility:info" /> 
+                     </aura:if>  
+                     <aura:if isTrue="{!v.editLoggerRecord}">
+                         <lightning:input aura:id="recordform" 
+                                          label="{!v.descriptionObject.ivpcc__log_levels__c.label}"
+                                          value="{!v.loggerRecord.ivpcc__Log_Levels__c}"
+                                          required="{!v.descriptionObject.ivpcc__log_levels__c.required == 'true' ? true : false}"
+                                          class="hideLabel"/>
+                         <aura:set attribute="else">
+                             <div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.loggerRecord.ivpcc__Log_Levels__c}</div>
+                         </aura:set>
+                     </aura:if>
+                 </div>
+             </lightning:layoutItem>
+             <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                 <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                     <label class="slds-form-element__label" for="text-input-id-1">
+                         <aura:if isTrue="{!v.editLoggerRecord}">
+                             <aura:if isTrue="{!v.descriptionObject.ivpcc__max_heap_allocated_for_logger__c.required == 'true'}">
+                                 <abbr class="slds-required" title="required">*</abbr>
+                             </aura:if>
+                         </aura:if>
+                         {!v.descriptionObject.ivpcc__max_heap_allocated_for_logger__c.label}
+                     </label>
+                     <aura:if isTrue="{!v.descriptionObject.ivpcc__max_heap_allocated_for_logger__c.helptext}">
+                         <lightning:helptext content="{!v.descriptionObject.ivpcc__max_heap_allocated_for_logger__c.helptext}" iconName="utility:info" /> 
+                     </aura:if>  
+                     <aura:if isTrue="{!v.editLoggerRecord}">
+                         <lightning:input type="number"
+                                          aura:id="recordform" 
+                                          label="{!v.descriptionObject.ivpcc__max_heap_allocated_for_logger__c.label}"
+                                          value="{!v.loggerRecord.ivpcc__Max_Heap_Allocated_For_Logger__c}"
+                                          required="{!v.descriptionObject.ivpcc__max_heap_allocated_for_logger__c.required == 'true' ? true : false}"
+                                          class="hideLabel"/>  
+                         <aura:set attribute="else">
+                             <div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.loggerRecord.ivpcc__Max_Heap_Allocated_For_Logger__c}</div>
+                         </aura:set>
+                     </aura:if>
+                 </div>
+             </lightning:layoutItem>
+             <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                 <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                     <label class="slds-form-element__label" for="text-input-id-1">
+                         <aura:if isTrue="{!v.editLoggerRecord}">
+                             <aura:if isTrue="{!v.descriptionObject.ivpcc__max_log_capture_size__c.required == 'true'}">
+                                 <abbr class="slds-required" title="required">*</abbr>
+                             </aura:if>
+                         </aura:if>
+                         {!v.descriptionObject.ivpcc__max_log_capture_size__c.label}
+                     </label>
+                     <aura:if isTrue="{!v.descriptionObject.ivpcc__max_log_capture_size__c.helptext}">
+                         <lightning:helptext content="{!v.descriptionObject.ivpcc__max_log_capture_size__c.helptext}" iconName="utility:info" /> 
+                     </aura:if>
+                     <aura:if isTrue="{!v.editLoggerRecord}">
+                         <lightning:input type="number"
+                                          aura:id="recordform" 
+                                          label="{!v.descriptionObject.ivpcc__max_log_capture_size__c.label}"
+                                          value="{!v.loggerRecord.ivpcc__Max_Log_Capture_Size__c}"
+                                          required="{!v.descriptionObject.ivpcc__max_log_capture_size__c.required == 'true' ? true : false}"
+                                          class="hideLabel"/> 
+                         <aura:set attribute="else">
+                             <div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.loggerRecord.ivpcc__Max_Log_Capture_Size__c}</div>
+                         </aura:set>
+                     </aura:if>
+                 </div>
+             </lightning:layoutItem>
+         </lightning:layout>
+    </lightning:card>
+</aura:component>

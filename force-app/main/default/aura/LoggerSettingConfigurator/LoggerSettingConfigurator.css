@@ -1,0 +1,15 @@
+.THIS .slds-card__footer button {
+   margin-top: 0;
+}
+
+.THIS .hideLabel label {
+    display:none;
+}
+
+.THIS .slds-truncate {
+    white-space: normal;
+}
+
+.THIS .slds-tabs_default__content {
+    padding-top: .3rem;
+}

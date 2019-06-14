@@ -1,0 +1,308 @@
+<aura:component controller="MedDRASettingConfiguratorController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="descriptionObject" type="Object" access="private" description="Description Map to Fetch Label, Helptext for fields" />
+    <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" description="Displaying spinner while loading" />
+    <aura:attribute name="editMeddraRecord" default="false" type="boolean" access="private" description="Attribute to decide either view or edit form must be displayed" />
+    <aura:attribute name="meddraRecord" type="Meddra_Settings__c" access="private" description="Attribute to hold MedDRA custom settings data" 
+                    default="{ 
+                                 'sobjectType': 'Meddra_Settings__c',
+                                 'Id': '',
+                                 'Name': '',
+                                 'ivpcc__Event_Hierarchy_API_Path__c': '',
+                                 'ivpcc__Event_Terms_By_Hierarchy_Name_API_Path__c': '',
+                                 'ivpcc__Include_Synonymn__c': 'false',
+                                 'ivpcc__Japanese_Language_Family__c': '',
+                                 'ivpcc__Languages__c': '',
+                                 'ivpcc__Levels__c':'',
+                                 'ivpcc__MedDRA_terms_from_SMQ_API_Path__c':'',
+                                 'ivpcc__SMQ_List_API_Path__c':'',
+                                 'ivpcc__Versions__c':'',
+                             }"
+	/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" description="Fetching MedDRA custom setting data after component has initialized" />
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner />
+    </aura:if> 
+            
+    <lightning:layout horizontalAlign="center">
+        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12">                
+            <lightning:card>
+                <!-- Card Header -->
+                <aura:set attribute="title">
+                    <div class="slds-m-horizontal--small slds-m-vertical--x-small">
+                        MedDRA Settings
+                    </div>
+                </aura:set>
+                
+                <!-- Card Footer -->
+                <aura:set attribute="footer">
+                    <aura:if isTrue="{!v.editMeddraRecord}">
+                        <div class="slds-text-align_right">
+                            <lightning:button label="Cancel" 
+                                              class="slds-m-top--medium slds-m-right_xx-small"
+                                              onclick="{!c.handleViewMedDRARecord}"/>
+                            <lightning:button label="{!(v.meddraRecord.Id == null ? 'Save' : 'Save')}" 
+                                              class="slds-m-top--medium slds-m-right_xx-small"
+                                              variant="brand"
+                                              onclick="{!c.handleUpsertMedDRARecord}"/>
+                        </div>
+                    </aura:if>
+                </aura:set>
+                
+                <!-- Card Action -->
+                <aura:set attribute="actions">                        
+                    <aura:if isTrue="{!!v.editMeddraRecord}">
+                        <lightning:button label="Edit" onclick="{!c.handleEditMedDRARecord}"/>
+                    </aura:if>
+                </aura:set>
+                
+                <!-- Card Body -->
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.name.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.name.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.name.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.name.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.name.label}"                                 
+                                                 value="{!v.meddraRecord.Name}"
+                                                 required="{!v.descriptionObject.name.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>  
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.Name}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__levels__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__levels__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__levels__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__levels__c.helptext}"	iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 name="levels"
+                                                 label="{!v.descriptionObject.ivpcc__levels__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__Levels__c}"
+                                                 required="{!v.descriptionObject.ivpcc__levels__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__Levels__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__japanese_language_family__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__japanese_language_family__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__japanese_language_family__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__japanese_language_family__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__japanese_language_family__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__Japanese_Language_Family__c}"  
+                                                 required="{!v.descriptionObject.ivpcc__japanese_language_family__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__Japanese_Language_Family__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__meddra_terms_from_smq_api_path__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__meddra_terms_from_smq_api_path__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__meddra_terms_from_smq_api_path__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__meddra_terms_from_smq_api_path__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__meddra_terms_from_smq_api_path__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__MedDRA_terms_from_SMQ_API_Path__c}"  
+                                                 required="{!v.descriptionObject.ivpcc__meddra_terms_from_smq_api_path__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__MedDRA_terms_from_SMQ_API_Path__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__versions__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__versions__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__versions__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__versions__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__versions__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__Versions__c}"
+                                                 required="{!v.descriptionObject.ivpcc__versions__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__Versions__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__event_hierarchy_api_path__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__event_hierarchy_api_path__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__event_hierarchy_api_path__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__event_hierarchy_api_path__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__event_hierarchy_api_path__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__Event_Hierarchy_API_Path__c}"
+                                                 required="{!v.descriptionObject.ivpcc__event_hierarchy_api_path__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__Event_Hierarchy_API_Path__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__event_terms_by_hierarchy_name_api_path__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__event_terms_by_hierarchy_name_api_path__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__event_terms_by_hierarchy_name_api_path__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__event_terms_by_hierarchy_name_api_path__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                        	<aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__event_terms_by_hierarchy_name_api_path__c.label}"
+                                                 value="{!v.meddraRecord.ivpcc__Event_Terms_By_Hierarchy_Name_API_Path__c}"
+                                                 required="{!v.descriptionObject.ivpcc__event_terms_by_hierarchy_name_api_path__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__Event_Terms_By_Hierarchy_Name_API_Path__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__languages__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__languages__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__languages__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__languages__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__languages__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__Languages__c}"
+                                                 required="{!v.descriptionObject.ivpcc__languages__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/> 
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__Languages__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small">
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                <aura:if isTrue="{!v.editMeddraRecord}">
+                                    <aura:if isTrue="{!v.descriptionObject.ivpcc__smq_list_api_path__c.required == 'true'}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </aura:if>
+                                </aura:if>
+                                {!v.descriptionObject.ivpcc__smq_list_api_path__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__smq_list_api_path__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__smq_list_api_path__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.editMeddraRecord}">
+                                <lightning:input aura:id="recordform" 
+                                                 label="{!v.descriptionObject.ivpcc__smq_list_api_path__c.label}"                                             
+                                                 value="{!v.meddraRecord.ivpcc__SMQ_List_API_Path__c}"
+                                                 required="{!v.descriptionObject.ivpcc__smq_list_api_path__c.required == 'true' ? true : false}"
+                                                 class="hideLabel"/>
+                                <aura:set attribute="else">
+                                 	<div class="slds-form-element_readonly slds-p-bottom_xx-small">{!v.meddraRecord.ivpcc__SMQ_List_API_Path__c}</div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                        <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                            <label class="slds-form-element__label" for="text-input-id-1">
+                                {!v.descriptionObject.ivpcc__include_synonymn__c.label}
+                            </label>
+                            <aura:if isTrue="{!v.descriptionObject.ivpcc__include_synonymn__c.helptext}">
+                            	<lightning:helptext content="{!v.descriptionObject.ivpcc__include_synonymn__c.helptext}" iconName="utility:info" /> 
+                            </aura:if>
+                            <lightning:input aura:id="recordform" 
+                                             disabled="{!v.editMeddraRecord != true ? true : false}"
+                                             checked="{!v.meddraRecord.ivpcc__Include_Synonymn__c}" 
+                                             type="toggle"                                               
+                                             variant="label-hidden" 
+                                             messageToggleActive="" 
+                                             messageToggleInactive="" 
+                                             class="align-center-toggle" />
+                        </div>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

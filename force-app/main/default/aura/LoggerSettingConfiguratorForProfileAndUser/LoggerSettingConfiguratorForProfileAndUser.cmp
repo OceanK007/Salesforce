@@ -1,0 +1,36 @@
+<aura:component controller="LoggerSettingConfiguratorController">
+    <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" description="Displaying spinner while loading" />
+    <aura:attribute name="descriptionObject" type="Object" access="public" description="Description Map to Fetch Label, Helptext for fields" />
+    <aura:attribute name="loggerRecords" type="List" access="public" description="Attribute to hold Logger custom settings data for profile and user"  />
+    <aura:attribute name="loggerColumns" type="List" access="private" description="Attribute to hold logger custom settings columns" />
+    <aura:attribute name="profiles" type="List" access="public" description="To hold all profiles records" />
+    <aura:attribute name="users" type="List" access="public" description="To hold all users records" />
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" description="Fetching Logger custom setting data after component has initialized" />
+    
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner />
+    </aura:if>
+    
+    <lightning:card> 
+         <!-- Card Action -->
+         <aura:set attribute="actions">                  
+            <lightning:button label="New" onclick="{!c.handleNewLoggerRecord}"/>
+         </aura:set>
+        
+        <!-- Card Body -->
+        <!--<aura:iteration items="{!v.loggerRecords}" var="loggerRecord" indexVar="key">
+                <div></div>
+            </aura:iteration>-->
+        <div class="slds-m-top_xx-small">
+            <lightning:datatable
+                  columns="{! v.loggerColumns }"
+                  data="{! v.loggerRecords }"
+                  keyField="id"
+                  onrowaction="{! c.handleRowAction }"
+                  hideCheckboxColumn="true"/>
+        </div>
+    </lightning:card>
+</aura:component>

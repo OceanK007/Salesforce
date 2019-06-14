@@ -1,0 +1,35 @@
+<aura:component controller="LoggerSettingConfiguratorController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="descriptionObject" type="Object" access="private" description="Description Map to Fetch Label, Helptext for fields" />
+    <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" description="Displaying spinner while loading" />
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" description="Fetching Logger custom setting data after component has initialized" />
+    
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner />
+    </aura:if>
+    
+    <lightning:layout horizontalAlign="center">
+        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12">
+            <lightning:card>
+                <!-- Card Header -->
+                <aura:set attribute="title">
+                    <div class="slds-m-horizontal--small slds-m-vertical--x-small">
+                        Logger Settings
+                    </div>
+                </aura:set>
+                
+                <!-- Card Body -->
+                <div class="slds-m-horizontal--large">
+                    <lightning:tabset selectedTabId="one">
+                        <lightning:tab label="Organizational" id="one">
+                            <c:LoggerSettingConfiguratorForOrganization descriptionObject="{!v.descriptionObject}" />
+                        </lightning:tab>
+                        <lightning:tab label="Profile/User" id="two">
+                            <c:LoggerSettingConfiguratorForProfileAndUser descriptionObject="{!v.descriptionObject}" />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </div>
+            </lightning:card>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>
