@@ -1,0 +1,77 @@
+<aura:component controller="LookupController" access="global">
+    <aura:attribute name="isRecordSelected" access="public" type="Boolean" default="false" description="Used variable to enable if record is already selected"/>
+    <aura:attribute name="objectAPIDetails" type="String" access="public" description="Use to hold all details for Object API" />
+    <aura:attribute name="searchKeyword" type="String" access="public" description="To hold value of input box" />
+    <aura:attribute name="selectedRecord" access="public" type ="Object"  description="Use to hold selected record"  />
+    <aura:attribute name="iconName" type="string" access="public" description="Lookup icon for lookup object"/>
+    <aura:attribute name="objectAPIName" type="String" access="public" default="Profile" description="Object API name" />    
+    <aura:attribute name="searchFieldAPIName" type="String" access="public" default="Name" description="Object field on which we search for result" />
+    <aura:attribute name="displayColumnsAPINames" type="String" access="public" default="Name" description="Object fields to display in search result modal" />
+    <aura:attribute name="isModalOpen" type="Boolean" default="false" description="To check if modal is open or not" />
+    <aura:attribute name="recentFiveRecords" type="List" access="public" description="To hold the recently added five records" />
+    <aura:attribute name="orderByFieldAPI" type="String" default="CreatedDate" description="Default field API name on sorting sorting will be performed"/>
+    <aura:attribute name="searchOrder" type="String" default="DESC" description="Default search order" />
+    	
+    <!-- Attribute for data table -->
+    <aura:attribute name="columns" type="List" default="[]"/>
+    <aura:attribute name="data" type="List" default="[]"/>
+    <aura:attribute name="keyField" type="String" default="id"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" default="0"/>
+    <aura:attribute name="loadMoreOffset" type="Integer" default="20" description="Determines when to trigger infinite loading based on how many pixels the table's scroll position is from the bottom of the table. The default is 20"/>
+    <aura:attribute name="queryLimit" type="Integer" default="3"/>
+    <aura:attribute name="queryOffset" type="Integer" default="0" description="Determines how many rows to skip in SOQL" />
+    <aura:attribute name="sortedDirection" type="String" default="Desc"/>    
+    <aura:attribute name="sortedBy" type="String" default="CreatedDate"/>
+    <aura:attribute name="loadMoreStatus" type="String" default=""/>
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" description = "Specifies the default sorting direction on an unsorted column. Valid options include 'asc' and 'desc'. The default is 'asc' for sorting in ascending order"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event"/>
+    <aura:handler name="refreshModalDataTable" event="c:LookupSearchKeywordEvent" action="{!c.handleSearchKeywordChange}" />     
+    
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+    <lightning:layout verticalAlign="center">
+        <lightning:layoutItem size="4" flexibility="auto">             
+            <div>
+                <c:LookupComponent selectedRecord="{!v.selectedRecord}" 
+                                   iconName="{!v.iconName}"
+                                   isReadOnly="false"
+                                   objectAPIName="{!v.objectAPIName}"
+                                   searchFieldAPIName="{!v.searchFieldAPIName}"
+                                   displayColumnsAPINames="{!v.displayColumnsAPINames}"
+                                   objectAPIDetails="{!v.objectAPIDetails}"
+                                   searchKeyword="{!v.searchKeyword}"
+                                   isModalOpen="{!v.isModalOpen}"
+                                   recentFiveRecords="{!v.recentFiveRecords}"/> 
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
+    
+    <hr class="separator slds-m-top_small slds-m-bottom_none" />
+        
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="12">             
+        	<div class="slds-m-bottom_small" style="height: 333px" id="dataTableDiv">
+                <aura:if isTrue="{!v.data.length > 0}">
+                    <lightning:datatable
+                        columns="{! v.columns }"
+                        data="{! v.data }"
+                        keyField="{! v.keyField }"
+                        showRowNumberColumn="false"
+                        enableInfiniteLoading="{! v.enableInfiniteLoading }"
+                        loadMoreOffset="{! v.loadMoreOffset }"
+                        onloadmore="{! c.loadMoreData }"
+                        hideCheckboxColumn="false"
+                        maxRowSelection="1"
+                        onrowselection="{! c.updateSelectedRecord }"
+                        defaultSortDirection="{! v.defaultSortDirection }"
+                        sortedBy="{! v.sortedBy }"
+                        sortedDirection="{! v.sortedDirection }"
+                        onsort="{!c.updateColumnSorting }"/>
+                </aura:if>
+                {! v.loadMoreStatus }
+            </div>            
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

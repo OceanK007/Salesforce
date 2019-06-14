@@ -1,0 +1,36 @@
+<aura:component description="Generic Lookup" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasSObjectName,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+	<aura:attribute name="modalMode" type="String" access="public" description="Attribute to check either to edit or view record" />
+    <aura:attribute name="locationValue" type="String" default="profile" access="public" description="To set the default value of location dropdown" />
+    <aura:attribute name="selectedRecord" access="public" type ="Object"  description="Use to hold selected record"  />
+    <aura:attribute name="isReadOnly" access="public" default="false" type="Boolean" description="To display lookup either read only or editable" />    
+    <aura:attribute name="iconName" type="string" access="public" default="standard:account" description="Lookup icon for lookup object"/>
+    <aura:attribute name="objectAPIName" type="String" access="public" default="Profile" description="Object API name" />        
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event"/>
+    
+    <lightning:card>  
+    	<lightning:layout verticalAlign="center">   
+            <lightning:layoutItem size="6" flexibility="auto"> 
+                <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                   <lightning:select aura:id="location"
+                                      name="location" 
+                                      label="Location" 
+                                      disabled="{!v.modalMode == 'view'}" 
+                                      value="{!v.locationValue}"
+                                      onchange="{!c.handleOnChangeLocation}">
+                        <option value="profile">Profile</option>
+                        <option value="user">User</option>
+                    </lightning:select>  
+                 </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" flexibility="auto"> 
+                <div class="slds-m-horizontal--large slds-m-vertical--x-small"> 
+                    <c:LookupContainer objectAPIName="{!v.objectAPIName}"
+                                       iconName="{!v.iconName}"
+                                       selectedRecord="{!v.selectedRecord}"
+                                       isReadOnly="{!v.isReadOnly}"/>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

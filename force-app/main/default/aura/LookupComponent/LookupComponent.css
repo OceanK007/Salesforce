@@ -1,0 +1,11 @@
+.THIS.read-only {
+    pointer-events: none;
+}
+
+.THIS .lookup-inputbox label {
+    display: none;
+}
+
+.THIS .lookup-inputbox input {
+    border: none;
+}
