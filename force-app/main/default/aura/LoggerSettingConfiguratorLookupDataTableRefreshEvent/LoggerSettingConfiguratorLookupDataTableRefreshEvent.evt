@@ -1,3 +1,0 @@
-<aura:event type="component" description="To Refresh Lookup data table Event template" >
-				<aura:attribute name="searchWord" type="String"/>
-</aura:event>

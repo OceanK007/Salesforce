@@ -1,0 +1,82 @@
+<aura:component controller="CombinationUnitFieldController" access="global" implements="flexipage:availableForAllPageTypes">
+	<aura:attribute name="recordId" type="String" description="To hold the record id on particular record " />
+    
+    <!-- Input parameters provided by parent component -->
+    <aura:attribute name="sObject" type="Object" description="Object to hold record data" />
+    <aura:attribute name="combinationUnitInputObjectAPI" type="String" description="To hold the combobox input object API name" />
+    <aura:attribute name="combinationUnitInputFieldAPI" type="String" description="To hold the combobox input field API name" />
+    <aura:attribute name="combinationUnitLookupFieldAPI" type="String" description="To hold the combobox lookup field API name" />
+    <aura:attribute name="combinationUnitLookupObjectAPI" type="String" description="To hold the combobox lookup object API name" />
+    
+    <!-- These will hold the combobox field values -->
+    <!--<aura:attribute name="combinationUnitInputFieldValue" access="public" type="String" description="To access combobox input value" />-->
+    <aura:attribute name="combinationUnitLookupFieldValue" access="public" type="String" description="To access combobox lookup value"/>
+    
+    <aura:attribute name="combinationUnitLookupFieldAvailableValues" access="public" type="List"  />
+    <aura:attribute name="combinationUnitInputFieldType" access="public" type="String" />
+    
+    <aura:attribute name="isReadOnly" access="public" type="Boolean" default="false" description="To display either read only or editable" />    
+    <aura:attribute name="searchKeyWordResults" access="public" type="Object" />
+    <aura:attribute name="showDropDown" access="public" default="false" type="Boolean" />
+    <aura:attribute name="combinationUnitLabel" access="public" type="String" />
+    <aura:attribute name="searchKeyWord" access="public" default="" type="String" />
+    <aura:attribute name="isDropdownFocused" type="Boolean" access="public" default="false" description="To check if dropdown is focused or not" />
+        
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event to fetch details of object"/>
+    
+    <div class="{!v.isReadOnly == true ? 'slds-form-element slds-hint-parent read-only' : 'slds-form-element slds-hint-parent'}">
+        <div class="slds-form-element__control">
+            <div class="uiInput forceSearchInputLookupDesktop uiInput--default">
+                <label class="label inputLabel uiLabel-left form-element__label uiLabel">
+                    <span class="slds-form-element__label">{!v.combinationUnitLabel}</span>
+                </label>
+                <div>
+                    <div class="contentWrapper slds-box--border">                        
+                        <div class="pillContainerWrapper singlePill noSeparator" >
+                            <div role="application" class="">
+                                <lightning:layout>
+            						<lightning:layoutItem class="slds-p-around_xx-small" size="6">
+                                            <lightning:inputField aura:id="combinationUnitInputField"
+                                                                  variant="label-hidden"
+                                                                  fieldName="{!v.combinationUnitInputFieldAPI}" 
+                                           						  onchange="{!c.setCombinationUnitInputFieldValue}"/>
+                                    </lightning:layoutItem>                                    	
+                                    <lightning:layoutItem class="slds-p-around_xx-small" size="6">
+                                        <div class="slds-combobox_container">
+                                            <div aura:id="dropdownItems" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-input-has-icon slds-input-has-icon_right" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                                                <span class="slds-p-around_none">
+                                                    <lightning:input aura:id="searchKey" 
+                                                                     variant="label-hidden" 
+                                                                     class="slds-combobox__input" 
+                                                                     value="{!v.searchKeyWord}" 
+                                                                     placeholder="{! 'Search ' + v.combinationUnitLabel+ ' Unit'}" 
+                                                                     onchange="{!c.displayResultsBySearchKeyWord}" 
+                                                                     onfocus="{!c.searchInputFocus}"  
+                                                                     onblur="{!c.searchInputBlur}"/>
+                                                </span>
+                                                <div aura:id="typeaheadResult" class="slds-dropdown slds-dropdown_fluid customScroll" role="listbox" tabindex="0" onmousedown="{!c.focusDropdown}" onblur="{!c.blurDropdown}" >
+                                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                        <aura:iteration items="{!v.searchKeyWordResults}" var="res">
+                                                            <li id="{!res.id}" title="{!res.value}" onmousedown ="{!c.selectItem}" role="presentation" class="slds-listbox__item">
+                                                                <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                                    <span class="slds-media__body">
+                                                                        {!res.value}
+                                                                    </span>
+                                                                </div>
+                                                            </li>
+                                                        </aura:iteration>
+                                                        
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

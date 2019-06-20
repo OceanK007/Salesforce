@@ -1,0 +1,12 @@
+.THIS.read-only {
+    pointer-events: none;
+}
+
+.THIS .lookup-inputbox input {
+    
+}
+
+.THIS .customScroll {
+    overflow:auto;
+    max-height: 10rem;
+}
