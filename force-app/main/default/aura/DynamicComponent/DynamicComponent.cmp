@@ -1,0 +1,13 @@
+<aura:component >
+    <aura:attribute name="firstName" type="String" default="Ocean" />
+    <aura:attribute name="lastName" type="String" default="Life" />
+    
+    <lightning:layout multipleRows="true" class="slds-box slds-p-around_none slds-m-top_xx-small">
+        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6" padding="around-small">
+            <lightning:input name="firstName" value="{!v.firstName}" label="First Name" />
+        </lightning:layoutItem>
+        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6" padding="around-small">
+            <lightning:input name="lastName" value="{!v.lastName}" label="Last Name" />
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>
