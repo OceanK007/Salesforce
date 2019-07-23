@@ -1,0 +1,63 @@
+<aura:component controller="EnhancedLookupController" access="global" implements="flexipage:availableForAllPageTypes">    
+    <!-- Input parameters provided by parent component -->
+    <aura:attribute name="recordId" type="String" description="To hold the record id on particular record " />
+    <aura:attribute name="sObject" type="Object" description="Object to hold record data" />
+    <aura:attribute name="objectAPI" type="String" default="Account" description="To hold the object API name where we will put enhanced lookup" />
+    <aura:attribute name="lookupFieldAPI" type="String" default="Measurement_Unit_Lookup__c" description="To hold the enhanced lookup field API name" />
+    <aura:attribute name="lookupObjectAPI" type="String" default="Measurement_Unit__c" description="To hold the enhanced lookup object API name" />
+    
+    <!-- These will hold the lookup field all details (label, helptext, fieldtype, required, available values) -->
+    <aura:attribute name="lookupFieldDetails" access="public" type="String" description="To access combobox lookup value"/>
+    
+    <!-- These will hold the lookup field available values -->
+    <aura:attribute name="lookupAvailableValues" access="public" type="List"  />
+    
+    <aura:attribute name="isReadOnly" access="public" type="Boolean" default="false" description="To display either read only or editable" />    
+    <aura:attribute name="searchKeyWordResults" access="public" type="Object" />
+    <aura:attribute name="showDropDown" access="public" default="false" type="Boolean" />
+    <aura:attribute name="lookupLabel" access="public" type="String" />
+    <aura:attribute name="searchKeyWord" access="public" default="" type="String" />
+    <aura:attribute name="isDropdownFocused" type="Boolean" access="public" default="false" description="To check if dropdown is focused or not" />
+        
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event to fetch details of object"/>
+    
+    <div class="{!v.isReadOnly == true ? 'slds-form-element slds-hint-parent read-only' : 'slds-form-element slds-hint-parent'}">
+        <div class="slds-form-element__control">
+            <div class="uiInput forceSearchInputLookupDesktop uiInput--default">
+                <label class="label inputLabel uiLabel-left form-element__label uiLabel">
+                    <span class="slds-form-element__label">{!v.lookupLabel}</span>
+                </label>
+                <div>
+                    <div class="slds-combobox_container">
+                        <div aura:id="dropdownItems" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-input-has-icon slds-input-has-icon_right" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                            <span class="slds-p-around_none">
+                                <lightning:input aura:id="searchKey" 
+                                                 variant="label-hidden" 
+                                                 class="slds-combobox__input hideHelpText" 
+                                                 value="{!v.searchKeyWord}" 
+                                                 placeholder="{! 'Search ' + v.combinationUnitLabel+ ' Unit'}" 
+                                                 onchange="{!c.displayResultsBySearchKeyWord}" 
+                                                 onfocus="{!c.searchInputFocus}"  
+                                                 onblur="{!c.searchInputBlur}"/>
+                            </span>
+                            <div aura:id="typeaheadResult" class="slds-dropdown slds-dropdown_fluid customScroll" role="listbox" tabindex="0" onmousedown="{!c.focusDropdown}" onblur="{!c.blurDropdown}" >
+                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                    <aura:iteration items="{!v.searchKeyWordResults}" var="res">
+                                        <li id="{!res.id}" title="{!res.value}" onmousedown ="{!c.selectItem}" role="presentation" class="slds-listbox__item">
+                                            <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                <span class="slds-media__body">
+                                                    {!res.value}
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </aura:iteration>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

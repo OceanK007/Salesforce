@@ -1,10 +1,9 @@
 ({
-	getCombinationUnitDetails : function(component) 
+	getLookupDetails : function(component) 
     {
-        var combinationUnitInputObjectAPI = component.get("v.combinationUnitInputObjectAPI");
-        var combinationUnitInputFieldAPI = component.get("v.combinationUnitInputFieldAPI");
-        var combinationUnitLookupFieldAPI = component.get("v.combinationUnitLookupFieldAPI");
-        var combinationUnitLookupObjectAPI = component.get("v.combinationUnitLookupObjectAPI");
+        var objectAPI = component.get("v.objectAPI");
+        var lookupFieldAPI = component.get("v.lookupFieldAPI");
+        var lookupObjectAPI = component.get("v.lookupObjectAPI");
         var recordId = component.get("v.recordId");
         var sObject = component.get("v.sObject");
         if(sObject == null)
@@ -12,18 +11,16 @@
             sObject = {};
         }
         
-        //console.log(combinationUnitInputObjectAPI);
-        //console.log(combinationUnitInputFieldAPI);
-        //console.log(combinationUnitLookupFieldAPI);
-        //console.log(combinationUnitLookupObjectAPI);
+        //console.log(objectAPI);
+        //console.log(lookupFieldAPI);
+        //console.log(lookupObjectAPI);
         //console.log(recordId);
                 
-        var action = component.get("c.getCombinationUnitDetails");        
+        var action = component.get("c.getEnhancedLookupDetails");        
         action.setParams({
-            "combinationUnitInputObjectAPI" : combinationUnitInputObjectAPI,
-            "combinationUnitInputFieldAPI" : combinationUnitInputFieldAPI,
-            "combinationUnitLookupFieldAPI" : combinationUnitLookupFieldAPI,
-            "combinationUnitLookupObjectAPI": combinationUnitLookupObjectAPI,
+            "objectAPI" : objectAPI,
+            "lookupFieldAPI" : lookupFieldAPI,
+            "lookupObjectAPI" : lookupObjectAPI,
             "recordId": recordId
         });
         action.setCallback(this, function(response) {	
@@ -37,39 +34,31 @@
                 {
                     //data.push({key:key, value:result[key]});
                     console.log('key: '+key+' | value: '+result[key]);
-                    if(key.toLowerCase() === combinationUnitInputFieldAPI.toLowerCase())
+                    if(key.toLowerCase() === lookupFieldAPI.toLowerCase())
                     {
-                        component.set("v.combinationUnitLabel", result[key].label);
-                        component.set("v.combinationUnitInputFieldType", result[key].type);
-                        
-                        /* Setting sObject value for combinationUnitInputFieldValue */
-                        sObject[combinationUnitInputFieldAPI] = result[key].value;
-        				component.set('v.sObject', sObject);
-                    }
-                    if(key.toLowerCase() === combinationUnitLookupFieldAPI.toLowerCase())
-                    {
-                        component.set("v.combinationUnitLookupFieldAvailableValues", result[key].availableValues);
+                        component.set("v.lookupLabel", result[key].label);
+                        component.set("v.lookupAvailableValues", result[key].availableValues);
                         component.set("v.searchKeyWordResults", result[key].availableValues.sort());
-                        component.set("v.combinationUnitLookupFieldValue", result[key].value);
+                        component.set("v.lookupFieldDetails", result[key].value);
                         
-                        var combinationUnitLookupFieldValue = result[key].value;
-                        //console.log("combinationUnitLookupFieldValue: "+combinationUnitLookupFieldValue);
+                        var lookupFieldDetails = result[key].value;
+                        //console.log("lookupFieldDetails: "+lookupFieldDetails);
                         //console.log("result[key]: "+JSON.stringify(result[key]));
-                        if(combinationUnitLookupFieldValue != undefined & combinationUnitLookupFieldValue != '')
+                        if(lookupFieldDetails != undefined & lookupFieldDetails != '')
                         {
                             for (var i = 0; i < result[key].availableValues.length; i++) 
                             { 
                                 var obj = result[key].availableValues[i];
-                                //console.log("Testing...."+obj.id+" | combinationUnitLookupFieldValue: "+combinationUnitLookupFieldValue);
-                                if(obj.id == combinationUnitLookupFieldValue)
+                                console.log("Testing...."+obj.id+" | lookupFieldDetails: "+lookupFieldDetails);
+                                if(obj.id == lookupFieldDetails)
                                 {
                                     console.log('set');
                                     component.set("v.searchKeyWord", obj.value);
                                 }
                                 //console.log("Testing...."+JSON.stringify(obj.id));
                             }
-                            /* Setting sObject value for combinationUnitLookupFieldValue */
-                            sObject[combinationUnitLookupFieldAPI] = combinationUnitLookupFieldValue;
+                            /* Setting sObject value for lookupFieldDetails */
+                            sObject[lookupFieldAPI] = lookupFieldDetails;
                             component.set('v.sObject', sObject);       
                             this.displayResultsBySearchKeyWord(component);
                             component.set("v.showDropDown", false);
@@ -91,14 +80,14 @@
     displayResultsBySearchKeyWord: function(component) 
     {
     	let searchKeyWord = component.get("v.searchKeyWord");
-		let combinationUnitLookupFieldAvailableValues = component.get("v.combinationUnitLookupFieldAvailableValues");
+		let lookupAvailableValues = component.get("v.lookupAvailableValues");
         
         if(searchKeyWord != undefined && searchKeyWord != '')
         {
             var searchResults = [];
-            for(var key in combinationUnitLookupFieldAvailableValues)
+            for(var key in lookupAvailableValues)
             {
-                var record = combinationUnitLookupFieldAvailableValues[key];
+                var record = lookupAvailableValues[key];
                 //console.log(record.id+' | '+record.value);
                 if(record.value.toLowerCase().includes(searchKeyWord.toLowerCase()))
                 {
@@ -119,22 +108,12 @@
         else
         {
             component.set("v.showDropDown", true);
-            component.set("v.searchKeyWordResults", combinationUnitLookupFieldAvailableValues);
+            component.set("v.searchKeyWordResults", lookupAvailableValues);
         }
         
         this.displayDropDown(component);
     },
-    
-    setCombinationUnitInputFieldValue: function(component) 
-    {
-        var sObject = component.get("v.sObject");
-        var combinationUnitInputFieldAPI = component.get("v.combinationUnitInputFieldAPI");
-        sObject[combinationUnitInputFieldAPI] = component.find("combinationUnitInputField").get("v.value");
-        component.set('v.sObject', sObject);
         
-        console.log("Updated Object: "+JSON.stringify(component.get("v.sObject")));
-    },
-    
     displayDropDown: function(component) 
     {
         var dropdownItems = component.find('dropdownItems');
@@ -156,11 +135,11 @@
         console.log("Component: "+event.currentTarget.title);
         
         component.set("v.searchKeyWord", event.currentTarget.title);  
-        component.set("v.combinationUnitLookupFieldValue", event.currentTarget.id);
+        component.set("v.lookupFieldDetails", event.currentTarget.id);
         
         var sObject = component.get("v.sObject");
-        var combinationUnitLookupFieldAPI = component.get("v.combinationUnitLookupFieldAPI");        
-        sObject[combinationUnitLookupFieldAPI] = event.currentTarget.id;    
+        var lookupFieldAPI = component.get("v.lookupFieldAPI");        
+        sObject[lookupFieldAPI] = event.currentTarget.id;    
         component.set('v.sObject', sObject);
         console.log("Updated Object: "+JSON.stringify(component.get("v.sObject")));
         

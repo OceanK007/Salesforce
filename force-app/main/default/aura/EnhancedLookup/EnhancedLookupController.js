@@ -1,16 +1,12 @@
 ({
 	doInit : function(component, event, helper) {
-        helper.getCombinationUnitDetails(component);
+        helper.getLookupDetails(component);
     },
     
     displayResultsBySearchKeyWord: function(component, event, helper) {
         helper.displayResultsBySearchKeyWord(component);
     },
-    
-    setCombinationUnitInputFieldValue: function(component, event, helper) {
-        helper.setCombinationUnitInputFieldValue(component);
-    },
-    
+        
     searchInputFocus: function(component, event, helper) {
      	helper.searchInputFocus(component);
     },
