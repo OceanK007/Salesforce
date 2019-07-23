@@ -39,7 +39,8 @@
                                             <lightning:inputField aura:id="combinationUnitInputField"
                                                                   variant="label-hidden"
                                                                   fieldName="{!v.combinationUnitInputFieldAPI}" 
-                                           						  onchange="{!c.setCombinationUnitInputFieldValue}"/>
+                                           						  onchange="{!c.setCombinationUnitInputFieldValue}"
+                                                                  class="hideHelpText"/>
                                     </lightning:layoutItem>                                    	
                                     <lightning:layoutItem class="slds-p-around_xx-small" size="6">
                                         <div class="slds-combobox_container">
@@ -47,7 +48,7 @@
                                                 <span class="slds-p-around_none">
                                                     <lightning:input aura:id="searchKey" 
                                                                      variant="label-hidden" 
-                                                                     class="slds-combobox__input" 
+                                                                     class="slds-combobox__input hideHelpText" 
                                                                      value="{!v.searchKeyWord}" 
                                                                      placeholder="{! 'Search ' + v.combinationUnitLabel+ ' Unit'}" 
                                                                      onchange="{!c.displayResultsBySearchKeyWord}" 

@@ -2,11 +2,11 @@
     pointer-events: none;
 }
 
-.THIS .lookup-inputbox input {
-    
-}
-
 .THIS .customScroll {
     overflow:auto;
     max-height: 10rem;
+}
+
+.THIS .hideHelpText .slds-form-element__icon {
+    display:none;
 }

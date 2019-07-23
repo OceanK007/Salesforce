@@ -1,10 +1,10 @@
 <aura:component access="global" implements="flexipage:availableForAllPageTypes,force:hasRecordId">
     <aura:attribute name="recordId" type="String" description="To hold the record id on particular record " />
 	<aura:attribute name="sObject" type="Object" description="Object to hold record data"/>
-    <aura:attribute name="combinationUnitInputObjectAPI" type="String" default="ivpcc__CSR_Patient__c" description="To hold the combobox input object API name" />
-    <aura:attribute name="combinationUnitInputFieldAPI" type="String" default="ivpcc__Age__c" description="To hold the combobox input field API name" />
-    <aura:attribute name="combinationUnitLookupFieldAPI" type="String" default="ivpcc__Age_Unit__c" description="To hold the combobox lookup field API name" />
-    <aura:attribute name="combinationUnitLookupObjectAPI" type="String" default="ivpcc__Ref_Age_Unit__c" description="To hold the combobox lookup object API name" />
+    <aura:attribute name="combinationUnitInputObjectAPI" type="String" default="Account" description="To hold the combobox input field object API name" />
+    <aura:attribute name="combinationUnitInputFieldAPI" type="String" default="Measurement_Value__c" description="To hold the combobox input field API name" />
+    <aura:attribute name="combinationUnitLookupFieldAPI" type="String" default="Measurement_Unit_Lookup__c" description="To hold the combobox lookup field API name" />
+    <aura:attribute name="combinationUnitLookupObjectAPI" type="String" default="Measurement_Unit__c" description="To hold the combobox lookup object API name" />
     
     <lightning:card title="Combination Unit Field">
         <div class="slds-p-around_medium slds-p-top_none slds-p-bottom_xxx-small">
