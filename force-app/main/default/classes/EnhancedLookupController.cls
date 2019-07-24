@@ -1,7 +1,7 @@
 public class EnhancedLookupController 
 {
 	@AuraEnabled
-    public static Map<String, Map<String, Object>> getEnhancedLookupDetails(String objectAPI, String lookupFieldAPI, String lookupObjectAPI, String recordId)
+    public static Map<String, Map<String, Object>> getEnhancedLookupDetails(String objectAPI, String lookupFieldAPI, String lookupObjectAPI, String lookupObjectFieldAPI, String recordId)
     {
 		Map<String,Map<String,Object>> detailsMap = new Map<String,Map<String,Object>>();
 		
@@ -38,7 +38,8 @@ public class EnhancedLookupController
                     
                     if(fieldName.equalsIgnoreCase(lookupFieldAPI))
                     {
-                        List<Object> valueList = getLookupValues(lookupObjectAPI, 'Name');
+                        //List<Object> valueList = getLookupValues(lookupObjectAPI, 'Name');
+                        List<Object> valueList = getLookupValues(lookupObjectAPI, lookupObjectFieldAPI);
                         description.put('availableValues', valueList);
                     }
                     

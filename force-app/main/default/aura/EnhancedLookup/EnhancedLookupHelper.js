@@ -4,6 +4,7 @@
         var objectAPI = component.get("v.objectAPI");
         var lookupFieldAPI = component.get("v.lookupFieldAPI");
         var lookupObjectAPI = component.get("v.lookupObjectAPI");
+        var lookupObjectFieldAPI = component.get("v.lookupObjectFieldAPI");
         var recordId = component.get("v.recordId");
         var sObject = component.get("v.sObject");
         if(sObject == null)
@@ -21,6 +22,7 @@
             "objectAPI" : objectAPI,
             "lookupFieldAPI" : lookupFieldAPI,
             "lookupObjectAPI" : lookupObjectAPI,
+            "lookupObjectFieldAPI": lookupObjectFieldAPI,
             "recordId": recordId
         });
         action.setCallback(this, function(response) {	

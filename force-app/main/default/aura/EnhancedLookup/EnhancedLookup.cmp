@@ -5,6 +5,7 @@
     <aura:attribute name="objectAPI" type="String" default="Account" description="To hold the object API name where we will put enhanced lookup" />
     <aura:attribute name="lookupFieldAPI" type="String" default="Measurement_Unit_Lookup__c" description="To hold the enhanced lookup field API name" />
     <aura:attribute name="lookupObjectAPI" type="String" default="Measurement_Unit__c" description="To hold the enhanced lookup object API name" />
+    <aura:attribute name="lookupObjectFieldAPI" type="String" default="Name" description="To hold the lookup object field api name to fetch lookup values" />
     
     <!-- These will hold the lookup field all details (label, helptext, fieldtype, required, available values) -->
     <aura:attribute name="lookupFieldDetails" access="public" type="String" description="To access combobox lookup value"/>
