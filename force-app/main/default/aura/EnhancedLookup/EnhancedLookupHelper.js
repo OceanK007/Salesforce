@@ -2,6 +2,8 @@
 	getLookupDetails : function(component) 
     {
         console.log("getLookupDetails");
+        component.set("v.searchKeyWord","");
+        
         var setupObject = component.get("v.setupObject");
         if(setupObject == null) return ;
         
