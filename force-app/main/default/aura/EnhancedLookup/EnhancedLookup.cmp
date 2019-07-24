@@ -2,10 +2,7 @@
     <!-- Input parameters provided by parent component -->
     <aura:attribute name="recordId" type="String" description="To hold the record id on particular record " />
     <aura:attribute name="sObject" type="Object" description="Object to hold record data" />
-    <aura:attribute name="objectAPI" type="String" default="Account" description="To hold the object API name where we will put enhanced lookup" />
-    <aura:attribute name="lookupFieldAPI" type="String" default="Measurement_Unit_Lookup__c" description="To hold the enhanced lookup field API name" />
-    <aura:attribute name="lookupObjectAPI" type="String" default="Measurement_Unit__c" description="To hold the enhanced lookup object API name" />
-    <aura:attribute name="lookupObjectFieldAPI" type="String" default="Name" description="To hold the lookup object field api name to fetch lookup values" />
+    <aura:attribute name="setupObject" type="Object" description="Object to hold setup data for enhanced lookup"/>
     
     <!-- These will hold the lookup field all details (label, helptext, fieldtype, required, available values) -->
     <aura:attribute name="lookupFieldDetails" access="public" type="String" description="To access combobox lookup value"/>
@@ -20,7 +17,8 @@
     <aura:attribute name="searchKeyWord" access="public" default="" type="String" />
     <aura:attribute name="isDropdownFocused" type="Boolean" access="public" default="false" description="To check if dropdown is focused or not" />
         
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event to fetch details of object"/>
+    <!--<aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event to fetch details of object"/>-->
+    <aura:handler name="change" value="{!v.setupObject}" action="{!c.doInit}" description="To handle setupObject value change"/>
     
     <div class="{!v.isReadOnly == true ? 'slds-form-element slds-hint-parent read-only' : 'slds-form-element slds-hint-parent'}">
         <div class="slds-form-element__control">

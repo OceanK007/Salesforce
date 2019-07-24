@@ -1,16 +1,23 @@
 ({
 	getLookupDetails : function(component) 
     {
-        var objectAPI = component.get("v.objectAPI");
-        var lookupFieldAPI = component.get("v.lookupFieldAPI");
-        var lookupObjectAPI = component.get("v.lookupObjectAPI");
-        var lookupObjectFieldAPI = component.get("v.lookupObjectFieldAPI");
+        console.log("getLookupDetails");
+        var setupObject = component.get("v.setupObject");
+        if(setupObject == null) return ;
+        
         var recordId = component.get("v.recordId");
         var sObject = component.get("v.sObject");
+        var objectAPI = setupObject.objectAPI;
+        var lookupFieldAPI = setupObject.lookupFieldAPI;
+        var lookupObjectAPI = setupObject.lookupObjectAPI;
+        var lookupObjectFieldAPI = setupObject.lookupObjectFieldAPI;
+        
         if(sObject == null)
         {
             sObject = {};
         }
+        
+        component.set('v.sObject', sObject);
         
         //console.log(objectAPI);
         //console.log(lookupFieldAPI);
@@ -44,8 +51,8 @@
                         component.set("v.lookupFieldDetails", result[key].value);
                         
                         var lookupFieldDetails = result[key].value;
-                        //console.log("lookupFieldDetails: "+lookupFieldDetails);
-                        //console.log("result[key]: "+JSON.stringify(result[key]));
+                        console.log("lookupFieldDetails: "+lookupFieldDetails);
+                        console.log("result[key]: "+JSON.stringify(result[key]));
                         if(lookupFieldDetails != undefined & lookupFieldDetails != '')
                         {
                             for (var i = 0; i < result[key].availableValues.length; i++) 

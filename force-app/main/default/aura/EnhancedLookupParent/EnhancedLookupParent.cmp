@@ -1,20 +1,16 @@
 <aura:component access="global" implements="flexipage:availableForAllPageTypes,force:hasRecordId">
     <aura:attribute name="recordId" type="String" description="To hold the record id on particular record " />
 	<aura:attribute name="sObject" type="Object" description="Object to hold record data"/>
-    <aura:attribute name="objectAPI" type="String" default="Account" description="To hold the object API name where we will put enhanced lookup" />
-    <aura:attribute name="lookupFieldAPI" type="String" default="Measurement_Unit_Lookup__c" description="To hold the enhanced lookup field API name" />
-    <aura:attribute name="lookupObjectAPI" type="String" default="Measurement_Unit__c" description="To hold the enhanced lookup object API name" />
-    <aura:attribute name="lookupObjectFieldAPI" type="String" default="Name" description="To hold the lookup object field api name to fetch lookup values" />
+    <aura:attribute name="setupObject" type="Object" description="Object to hold setup data for enhanced lookup"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event to fetch details of object"/>
     
     <lightning:card title="Enhanced Lookup">
         <div class="slds-p-around_medium slds-p-top_none slds-p-bottom_xxx-small">
             <lightning:recordEditForm recordId="{!v.recordId}" objectApiName="{!v.objectAPI}">
                 <c:EnhancedLookup recordId="{!v.recordId}"
                                   sObject="{!v.sObject}"
-                                  objectAPI="{!v.objectAPI}"
-                                  lookupFieldAPI="{!v.lookupFieldAPI}"
-                                  lookupObjectAPI="{!v.lookupObjectAPI}"
-                                  lookupObjectFieldAPI="{!v.lookupObjectFieldAPI}"/>
+                                  setupObject="{!v.setupObject}"/>
             </lightning:recordEditForm>
         </div>
     </lightning:card>
