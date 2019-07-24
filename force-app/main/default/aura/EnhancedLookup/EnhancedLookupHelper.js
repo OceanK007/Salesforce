@@ -146,8 +146,8 @@
         component.set("v.searchKeyWord", event.currentTarget.title);  
         component.set("v.lookupFieldDetails", event.currentTarget.id);
         
-        var sObject = component.get("v.sObject");
-        var lookupFieldAPI = component.get("v.lookupFieldAPI");        
+        var sObject = {};//component.get("v.sObject");
+        var lookupFieldAPI = component.get("v.setupObject").lookupFieldAPI;        
         sObject[lookupFieldAPI] = event.currentTarget.id;    
         component.set('v.sObject', sObject);
         console.log("Updated Object: "+JSON.stringify(component.get("v.sObject")));
