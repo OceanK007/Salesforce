@@ -1,0 +1,11 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global">
+	<aura:attribute name="dynamicComponents" type="Aura.Component[]" description="To hold dynamically created components references" />
+    <lightning:card title="Create Dropdown">
+        <p class="slds-p-horizontal_small">            
+            <lightning:button variant="brand" label="Create" onclick="{! c.handleCreateComponent }" />
+            <lightning:button variant="destructive" label="Delete" onclick="{! c.handleDeleteComponent }" />
+            <hr class="slds-m-top_small slds-m-bottom_small" />
+    		{!v.dynamicComponents}
+        </p>
+    </lightning:card>
+</aura:component>
