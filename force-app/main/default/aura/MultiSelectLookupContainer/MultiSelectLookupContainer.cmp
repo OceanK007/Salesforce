@@ -1,0 +1,22 @@
+<aura:component controller="MultiSelectLookupController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+	<aura:attribute name="recordId" type="String" description="To hold the record id on particular record " />
+	<aura:attribute name="sObject" type="Object" description="Object to hold selected record data"/>
+    <aura:attribute name="multiSelectSetupConfiguration" type="Object" description="Object to hold setup configuration data for multiselect lookup"/>
+    <aura:attribute name="label" type="String" default="MultiSelect Lookup" description="Holding label of Multiselect component" />
+    <aura:attribute name="iconName" type="String" default="standard:account" description="Holding icon name of Multiselect component" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Handling init event to fetch details of object"/>
+    <aura:handler name="change" value="{!v.sObject}" action="{!c.sObjectChangeHandler}" description="To handle sObject value change event"/>
+    
+    <lightning:card title="MultiSelect Lookup">
+        <div class="slds-p-around_medium slds-p-top_none slds-p-bottom_xxx-small">
+            <lightning:recordEditForm recordId="{!v.recordId}" objectApiName="{!v.multiSelectSetupConfiguration.Object_API_Name__c}">
+                <c:MultiSelectLookup recordId="{!v.recordId}"
+                                  	 sObject="{!v.sObject}"
+                                     multiSelectSetupConfiguration="{!v.multiSelectSetupConfiguration}"
+                                     label="{!v.label}"
+                                     iconName="{!v.iconName}"/>
+            </lightning:recordEditForm>
+        </div>
+    </lightning:card>
+</aura:component>
